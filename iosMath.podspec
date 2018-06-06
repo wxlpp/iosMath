@@ -13,7 +13,7 @@ beautifully rendered math equations in iOS/MacOS applications.
   s.author       = { "Kostub Deshmukh" => "kostub@gmail.com" }
   s.ios.deployment_target = '6.0'
   s.osx.deployment_target = '10.8'
-  s.source       = { :git => "https://gitee.com/WisdomExam/iosMath.git", :tag => s.version.to_s }
+  s.source       = { :git => "git@gitee.com:WisdomExam/WisdomMBASpecs.git", :tag => s.version.to_s }
   s.source_files = 'iosMath/**/*.{h,m}'
   s.private_header_files = 'iosMath/render/internal/*.h'
   s.resource_bundles = {
