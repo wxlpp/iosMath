@@ -14,7 +14,3 @@ target 'iosMathTests' do
   pod 'iosMath', :path => './'
 end
 
-target 'MacOSMath' do
-  project 'MacOSMath.xcodeproj'
-  pod 'iosMath', :path => './'
-end
