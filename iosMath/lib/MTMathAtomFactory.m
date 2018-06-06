@@ -79,7 +79,10 @@ NSString *const MTSymbolDegree = @"\u00B0"; // \circ
 + (MTMathAtom *)atomForCharacter:(unichar)ch
 {
     NSString *chStr = [NSString stringWithCharacters:&ch length:1];
-    if (ch < 0x21 || ch > 0x7E) {
+    if ((ch >= 0x4E00) && (ch <= 0x9FFF)) {
+        // CJK support.
+        return [MTMathAtom atomWithType:kMTMathAtomOrdinary value:chStr];
+    } else if (ch < 0x21 || ch > 0x7E) {
         // skip non ascii characters and spaces
         return nil;
     } else if (ch == '$' || ch == '%' || ch == '#' || ch == '&' || ch == '~' || ch == '\'') {
@@ -378,6 +381,27 @@ NSString *const MTSymbolDegree = @"\u00B0"; // \circ
         table.interColumnSpacing = 18;
         [table setAlignment:kMTColumnAlignmentLeft forColumn:0];
         [table setAlignment:kMTColumnAlignmentLeft forColumn:1];
+        // All the lists are in textstyle
+        MTMathAtom* style = [[MTMathStyle alloc] initWithStyle:kMTLineStyleText];
+        for (int i = 0; i < table.cells.count; i++) {
+            NSArray<MTMathList*>* row = table.cells[i];
+            for (int j = 0; j < row.count; j++) {
+                [row[j] insertAtom:style atIndex:0];
+            }
+        }
+        // Add delimiters
+        MTInner* inner = [[MTInner alloc] init];
+        inner.leftBoundary = [self boundaryAtomForDelimiterName:@"{"];
+        inner.rightBoundary = [self boundaryAtomForDelimiterName:@"."];
+        MTMathAtom* space = [self atomForLatexSymbolName:@","];
+        inner.innerList = [MTMathList mathListWithAtoms:space, table, nil];
+        return inner;
+    } else if ([env isEqualToString:@"array"]) {
+        table.interRowAdditionalSpacing = 0;
+        table.interColumnSpacing = 18;
+        [table setAlignment:kMTColumnAlignmentLeft forColumn:0];
+        [table setAlignment:kMTColumnAlignmentLeft forColumn:1];
+        [table setAlignment:kMTColumnAlignmentLeft forColumn:2];
         // All the lists are in textstyle
         MTMathAtom* style = [[MTMathStyle alloc] initWithStyle:kMTLineStyleText];
         for (int i = 0; i < table.cells.count; i++) {
@@ -854,20 +878,15 @@ NSString *const MTSymbolDegree = @"\u00B0"; // \circ
         fontStyles = @{
                        @"mathnormal" : @(kMTFontStyleDefault),
                        @"mathrm": @(kMTFontStyleRoman),
-                       @"textrm": @(kMTFontStyleRoman),
                        @"rm": @(kMTFontStyleRoman),
                        @"mathbf": @(kMTFontStyleBold),
                        @"bf": @(kMTFontStyleBold),
-                       @"textbf": @(kMTFontStyleBold),
                        @"mathcal": @(kMTFontStyleCaligraphic),
                        @"cal": @(kMTFontStyleCaligraphic),
                        @"mathtt": @(kMTFontStyleTypewriter),
-                       @"texttt": @(kMTFontStyleTypewriter),
                        @"mathit": @(kMTFontStyleItalic),
-                       @"textit": @(kMTFontStyleItalic),
                        @"mit": @(kMTFontStyleItalic),
                        @"mathsf": @(kMTFontStyleSansSerif),
-                       @"textsf": @(kMTFontStyleSansSerif),
                        @"mathfrak": @(kMTFontStyleFraktur),
                        @"frak": @(kMTFontStyleFraktur),
                        @"mathbb": @(kMTFontStyleBlackboard),

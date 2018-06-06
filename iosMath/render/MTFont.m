@@ -85,4 +85,29 @@
     CGFontRelease(self.defaultCGFont);
     CFRelease(self.ctFont);
 }
+
++ (MTFont *)latinModernFontWithSize:(CGFloat)size
+{
+    return [[MTFont alloc] initFontWithName:@"latinmodern-math" size:size];
+}
+
++ (MTFont *)xitsFontWithSize:(CGFloat)size
+{
+    return [[MTFont alloc] initFontWithName:@"xits-math" size:size];
+}
+
++ (MTFont *)termesFontWithSize:(CGFloat)size
+{
+    return [[MTFont alloc] initFontWithName:@"texgyretermes-math" size:size];
+}
+
++ (MTFont *)xitsFontAndChineseExtensionWithSize:(CGFloat)size
+{
+    return [[MTFont alloc] initFontWithName:@"xits-math-cn" size:size];
+}
+
++ (MTFont *)defaultFont
+{
+    return [[MTFont alloc] initFontWithName:@"xits-math" size:20];
+}
 @end
